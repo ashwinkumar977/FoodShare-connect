@@ -8,7 +8,8 @@ import {
   LayoutDashboard, Package, GitMerge, BarChart2, Shield,
   User, Bell, LogOut, Menu, X, Leaf, ChevronRight
 } from 'lucide-react';
-axios.defaults.baseURL = 'https://foodshare-x1x5.onrender.com'
+// Keep all API calls on the configured API origin (same origin by default).
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
 
 const NAV = [
   { label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', roles: ['business','charity','admin'] },

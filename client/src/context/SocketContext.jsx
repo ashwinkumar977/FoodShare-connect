@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!user || !token) return;
 
-    socketRef.current = io('https://foodshare-x1x5.onrender.com', { transports: ['websocket'] });
+    socketRef.current = io(import.meta.env.VITE_API_URL || '/', { transports: ['websocket'] });
 
     socketRef.current.on('connect', () => {
       socketRef.current.emit('join-room', user._id);

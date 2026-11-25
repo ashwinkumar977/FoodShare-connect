@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-axios.defaults.baseURL = 'https://foodshare-x1x5.onrender.com';
+// Use the same origin in production. Set VITE_API_URL only when hosting the
+// frontend and backend on separate origins; local development uses Vite proxy.
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
 
 const AuthContext = createContext(null);
 

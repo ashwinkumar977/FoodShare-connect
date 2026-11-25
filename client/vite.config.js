@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "https://foodshare-x1x5.onrender.com"
+      "/api": "http://localhost:5000",
+      "/socket.io": {
+        target: "http://localhost:5000",
+        ws: true,
+      },
     }
   }
 })

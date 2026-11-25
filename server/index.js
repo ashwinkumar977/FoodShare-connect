@@ -15,10 +15,11 @@ dns.setServers([
 
 const app = express();
 const server = http.createServer(app);
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: clientUrl,
     methods: ['GET', 'POST'],
   },
 });
@@ -27,7 +28,7 @@ const io = new Server(server, {
 app.set('io', io);
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: clientUrl, credentials: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -42,6 +43,13 @@ app.use('/api/notifications', require('./routes/notifications'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
+
+// In production, serve the built React app from the same service as the API.
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+  app.get('/{*path}', (req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+}
 
 // Socket.IO
 io.on('connection', (socket) => {
